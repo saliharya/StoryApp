@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.arya.storyapp.api.Story
-import com.arya.storyapp.api.StoryRepository
+import com.arya.storyapp.model.Story
+import com.arya.storyapp.repository.StoryRepository
 import com.arya.storyapp.api.StoryResponse
 import retrofit2.Call
 import retrofit2.Callback

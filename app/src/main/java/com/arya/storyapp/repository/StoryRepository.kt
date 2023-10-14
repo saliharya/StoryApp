@@ -1,5 +1,7 @@
-package com.arya.storyapp.api
+package com.arya.storyapp.repository
 
+import com.arya.storyapp.api.StoryResponse
+import com.arya.storyapp.api.StoryService
 import retrofit2.Call
 
 class StoryRepository(private val storyService: StoryService) {

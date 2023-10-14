@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arya.storyapp.R
-import com.arya.storyapp.api.Story
+import com.arya.storyapp.model.Story
 import com.bumptech.glide.Glide
 
 class ListStoriesAdapter :

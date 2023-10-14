@@ -2,7 +2,7 @@ package com.arya.storyapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.arya.storyapp.api.StoryRepository
+import com.arya.storyapp.repository.StoryRepository
 
 class MainViewModelFactory(private val storyRepository: StoryRepository) :
     ViewModelProvider.Factory {

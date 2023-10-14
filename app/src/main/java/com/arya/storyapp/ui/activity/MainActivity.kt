@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arya.storyapp.api.StoryRepository
+import com.arya.storyapp.repository.StoryRepository
 import com.arya.storyapp.api.StoryService
 import com.arya.storyapp.databinding.ActivityMainBinding
 import com.arya.storyapp.ui.adapter.ListStoriesAdapter

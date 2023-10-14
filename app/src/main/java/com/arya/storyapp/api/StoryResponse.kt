@@ -1,6 +1,7 @@
 package com.arya.storyapp.api
 
 import android.os.Parcelable
+import com.arya.storyapp.model.Story
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

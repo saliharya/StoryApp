@@ -4,13 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.arya.storyapp.api.AuthService
 import com.arya.storyapp.databinding.ActivityLoginBinding
 import com.arya.storyapp.ui.viewmodel.LoginViewModel
 import com.arya.storyapp.ui.viewmodel.LoginViewModelFactory
-import com.arya.storyapp.util.SessionManager
+import com.arya.storyapp.util.DataStoreManager
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -28,10 +29,10 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         val authService = retrofit.create(AuthService::class.java)
-        val sessionManager = SessionManager(this)
+        val dataStoreManager = DataStoreManager(this)
 
-        val factory = LoginViewModelFactory(authService, sessionManager)
-        viewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+        val factory = LoginViewModelFactory(authService, dataStoreManager)
+        viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
 
         binding.btnLogin.setOnClickListener {
             val email = binding.edLoginEmail.text.toString()
@@ -39,9 +40,12 @@ class LoginActivity : AppCompatActivity() {
             viewModel.loginUser(email, password)
         }
 
-        viewModel.loginResult.observe(this, Observer {
+        viewModel.loginResult.observe(this) {
             if (it != null) {
                 // Login successful, navigate to next activity
+                lifecycleScope.launch {
+                    dataStoreManager.saveToken(it.token)
+                }
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -53,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
+        }
 
         binding.tvSignUp.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)

@@ -57,10 +57,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.isLoadingLiveData.observe(this) { isLoading ->
             if (isLoading) {
                 // Show a loading indicator
-//                binding.progressBar.visibility = View.VISIBLE
+                //binding.progressBar.visibility = View.VISIBLE
             } else {
                 // Hide the loading indicator
-//                binding.progressBar.visibility = View.GONE
+                //binding.progressBar.visibility = View.GONE
             }
         }
 

@@ -40,11 +40,11 @@ class LoginActivity : AppCompatActivity() {
             viewModel.loginUser(email, password)
         }
 
-        viewModel.loginResult.observe(this) {
-            if (it != null) {
+        viewModel.loginResult.observe(this) { loginResult ->
+            if (loginResult != null) {
                 // Login successful, navigate to next activity
                 lifecycleScope.launch {
-                    dataStoreManager.saveToken(it.token)
+                    dataStoreManager.saveToken(loginResult.token)
                 }
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)

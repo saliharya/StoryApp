@@ -10,9 +10,7 @@ class LoginViewModelFactory(
     private val dataStoreManager: DataStoreManager
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(authService, dataStoreManager) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        return modelClass.getConstructor(AuthService::class.java, DataStoreManager::class.java)
+            .newInstance(authService, dataStoreManager)
     }
 }

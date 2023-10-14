@@ -35,15 +35,14 @@ class MainViewModel(
                 ) {
                     _isLoadingLiveData.value = false
 
-                    if (response.isSuccessful) {
-                        val storyResponse = response.body()
-                        val stories = storyResponse?.listStory
-                        _responseLiveData.value = stories
-                    } else {
-                        val errorBody = response.errorBody()?.string()
-                        Log.e("API_ERROR", "Error: $errorBody")
-                        _errorLiveData.value = "Failed to fetch stories"
-                    }
+                    response.body()?.let { storyResponse ->
+                        if (response.isSuccessful) {
+                            _responseLiveData.value = storyResponse.listStory
+                        } else {
+                            Log.e("API_ERROR", "Error: ${response.errorBody()?.string()}")
+                            _errorLiveData.value = "Failed to fetch stories"
+                        }
+                    } ?: run { _errorLiveData.value = "Failed to fetch stories" }
                 }
 
                 override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
@@ -53,4 +52,3 @@ class MainViewModel(
             })
     }
 }
-

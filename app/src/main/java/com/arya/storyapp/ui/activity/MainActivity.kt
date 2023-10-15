@@ -2,11 +2,15 @@ package com.arya.storyapp.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityMainBinding
 import com.arya.storyapp.ui.adapter.ListStoryAdapter
 import com.arya.storyapp.ui.viewmodel.MainViewModel
@@ -29,10 +33,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        setSupportActionBar(binding.toolbar)
         setupRecyclerView()
         observeViewModel()
         observeTokenAndLoadStories()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                // Handle logout action here
+                lifecycleScope.launch {
+                    dataStoreManager.clearToken()
+                    navigateToLogin()
+                }
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setupRecyclerView() = with(binding.rvStories) {
@@ -57,19 +82,12 @@ class MainActivity : AppCompatActivity() {
     private fun observeTokenAndLoadStories() = lifecycleScope.launch {
         dataStoreManager.tokenFlow.collectLatest { token ->
             if (token == null) navigateToLogin()
-            else viewModel.getAllStories(token).also { setupLogoutButton() }
+            else viewModel.getAllStories(token)
         }
     }
 
     private fun navigateToLogin() {
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         finish()
-    }
-
-    private fun setupLogoutButton() = binding.btnLogout.setOnClickListener {
-        lifecycleScope.launch {
-            dataStoreManager.clearToken()
-            navigateToLogin()
-        }
     }
 }

@@ -7,10 +7,14 @@ import com.arya.storyapp.api.AuthService
 import com.arya.storyapp.api.LoginResult
 import com.arya.storyapp.api.UserLoginRequest
 import com.arya.storyapp.util.DataStoreManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
-    private val authService: AuthService, private val dataStoreManager: DataStoreManager
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authService: AuthService,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
     val loginResult = MutableLiveData<LoginResult?>()
 

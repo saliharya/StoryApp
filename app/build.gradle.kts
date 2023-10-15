@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -15,6 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -56,4 +59,13 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("androidx.recyclerview:recyclerview:1.3.1")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    implementation("androidx.multidex:multidex:2.0.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+    implementation("androidx.activity:activity-ktx:1.8.0")
+
+}
+
+kapt {
+    correctErrorTypes = true
 }

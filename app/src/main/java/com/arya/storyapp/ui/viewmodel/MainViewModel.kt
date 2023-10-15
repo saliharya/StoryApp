@@ -4,15 +4,22 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.arya.storyapp.api.StoryResponse
 import com.arya.storyapp.model.Story
 import com.arya.storyapp.repository.StoryRepository
-import com.arya.storyapp.api.StoryResponse
+import com.arya.storyapp.util.DataStoreManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class MainViewModel(
-    private val storyRepository: StoryRepository
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val storyRepository: StoryRepository,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val _responseLiveData = MutableLiveData<List<Story>>()
@@ -27,7 +34,19 @@ class MainViewModel(
     fun getAllStories(bearerToken: String) {
         _isLoadingLiveData.value = true
 
-        storyRepository.getAllStories("Bearer $bearerToken", null, null, 0)
+        viewModelScope.launch {
+            dataStoreManager.tokenFlow.collect { token ->
+                if (token != null) {
+                    loadStories(bearerToken)
+                } else {
+                    _isLoadingLiveData.value = false
+                }
+            }
+        }
+    }
+
+    private fun loadStories(bearerToken: String) {
+        storyRepository.getAllStories(bearerToken, null, null, 0)
             .enqueue(object : Callback<StoryResponse> {
                 override fun onResponse(
                     call: Call<StoryResponse>,
@@ -39,10 +58,9 @@ class MainViewModel(
                         if (response.isSuccessful) {
                             _responseLiveData.value = storyResponse.listStory
                         } else {
-                            Log.e("API_ERROR", "Error: ${response.errorBody()?.string()}")
-                            _errorLiveData.value = "Failed to fetch stories"
+                            handleApiError(response.errorBody()?.string())
                         }
-                    } ?: run { _errorLiveData.value = "Failed to fetch stories" }
+                    } ?: run { handleApiError("Failed to fetch stories") }
                 }
 
                 override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
@@ -50,5 +68,10 @@ class MainViewModel(
                     _errorLiveData.value = "Network error occurred"
                 }
             })
+    }
+
+    private fun handleApiError(errorString: String?) {
+        Log.e("API_ERROR", "Error: $errorString")
+        _errorLiveData.value = "Failed to fetch stories"
     }
 }

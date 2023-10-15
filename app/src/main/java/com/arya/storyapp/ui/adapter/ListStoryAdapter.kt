@@ -11,8 +11,8 @@ import com.arya.storyapp.R
 import com.arya.storyapp.model.Story
 import com.bumptech.glide.Glide
 
-class ListStoriesAdapter :
-    ListAdapter<Story, ListStoriesAdapter.StoryViewHolder>(StoryDiffCallback()) {
+class ListStoryAdapter :
+    ListAdapter<Story, ListStoryAdapter.StoryViewHolder>(StoryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_story, parent, false)

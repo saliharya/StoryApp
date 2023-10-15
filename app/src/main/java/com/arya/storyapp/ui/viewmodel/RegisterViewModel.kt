@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arya.storyapp.api.AuthService
 import com.arya.storyapp.api.UserRegistrationRequest
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RegisterViewModel(private val authService: AuthService) : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor(private val authService: AuthService) : ViewModel() {
     val registrationResult = MutableLiveData<Boolean>()
 
     fun registerUser(name: String, email: String, password: String) {

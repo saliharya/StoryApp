@@ -34,6 +34,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        binding.btnAddStory.setOnClickListener {
+            navigateToAddStory()
+        }
+
         setupRecyclerView()
         observeViewModel()
         observeTokenAndLoadStories()
@@ -48,7 +53,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
-                // Handle logout action here
                 lifecycleScope.launch {
                     dataStoreManager.clearToken()
                     navigateToLogin()
@@ -75,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         isLoadingLiveData.observe(this@MainActivity) {
-            // Handle loading indicator if needed
         }
     }
 
@@ -89,5 +92,9 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToLogin() {
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         finish()
+    }
+
+    private fun navigateToAddStory() {
+        startActivity(Intent(this@MainActivity, AddStoryActivity::class.java))
     }
 }

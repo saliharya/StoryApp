@@ -30,15 +30,13 @@ class ListStoryAdapter :
         private val descriptionTextView = itemView.findViewById<TextView>(R.id.tvDescription)
 
         fun bind(story: Story) {
-            // Set the values for the views
             usernameTextView.text = story.name
             descriptionTextView.text = story.description
 
-            // Load the image using Glide
             Glide.with(itemView)
                 .load(story.photoUrl)
                 .centerCrop()
-                .placeholder(R.color.black) // Placeholder color while loading
+                .placeholder(R.color.black)
                 .into(storyImageView)
         }
     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityRegisterBinding
 import com.arya.storyapp.ui.viewmodel.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,11 +27,13 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         viewModel.registrationResult.observe(this) { isSuccessful ->
-            Toast.makeText(
-                this,
-                if (isSuccessful) "Registration successful" else "Oops! It looks like that email is already taken. Try another one and let's get you signed up!\" \uD83D\uDE04",
-                Toast.LENGTH_SHORT
-            ).show()
+            val message = if (isSuccessful) {
+                getString(R.string.registration_success)
+            } else {
+                getString(R.string.registration_failure)
+            }
+
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
             if (isSuccessful) finish()
         }

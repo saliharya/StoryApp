@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityLoginBinding
 import com.arya.storyapp.ui.viewmodel.LoginViewModel
 import com.arya.storyapp.util.DataStoreManager
@@ -39,16 +40,20 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginResult.observe(this) { loginResult ->
             if (loginResult != null) {
-                lifecycleScope.launch { dataStoreManager.saveToken(loginResult.token) }
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                lifecycleScope.launch {
+                    dataStoreManager.saveToken(loginResult.token)
+                    startMainActivity()
+                }
             } else {
-                Toast.makeText(
-                    this,
-                    "Oops! Did you mistype your username or password, or is your cat walking on the keyboard again? \uD83D\uDE40",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val errorMessage = getString(R.string.wrong_username_or_password_message)
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun startMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

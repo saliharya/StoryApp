@@ -12,4 +12,8 @@
     <string name="register_button_text">Register</string>
     <string name="story_image">Story Image</string>
     <string name="logout">Logout</string>
+    <string name="add_story">Add Story</string>
+    <string name="wrong_username_or_password_message">Oops! Did you mistype your username or password, or is your cat walking on the keyboard again? \uD83D\uDE40</string>
+    <string name="registration_success">Registration successful</string>
+    <string name="registration_failure">Oops! It looks like that email is already taken. Try another one and let\'s get you signed up! \\uD83D\\uDE04</string>
 </resources>

@@ -16,4 +16,9 @@
     <string name="wrong_username_or_password_message">Oops! Did you mistype your username or password, or is your cat walking on the keyboard again? \uD83D\uDE40</string>
     <string name="registration_success">Registration successful</string>
     <string name="registration_failure">Oops! It looks like that email is already taken. Try another one and let\'s get you signed up! \\uD83D\\uDE04</string>
+    <string name="image_view_upload">Image View Upload</string>
+    <string name="camera_button_text">Camera</string>
+    <string name="gallery_button_text">Gallery</string>
+    <string name="description">Description</string>
+    <string name="upload_button_text">Upload</string>
 </resources>

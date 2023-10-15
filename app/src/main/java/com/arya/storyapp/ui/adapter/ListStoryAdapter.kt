@@ -25,20 +25,21 @@ class ListStoryAdapter :
     }
 
     class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val storyImageView = itemView.findViewById<ImageView>(R.id.ivStory)
-        private val usernameTextView = itemView.findViewById<TextView>(R.id.tvUsername)
-        private val descriptionTextView = itemView.findViewById<TextView>(R.id.tvDescription)
+        private val storyImageView: ImageView = itemView.findViewById(R.id.ivStory)
+        private val usernameTextView: TextView = itemView.findViewById(R.id.tvUsername)
+        private val descriptionTextView: TextView = itemView.findViewById(R.id.tvDescription)
 
         fun bind(story: Story) {
-            usernameTextView.text = story.name
-            descriptionTextView.text = story.description
+            with(story) {
+                usernameTextView.text = name
+                descriptionTextView.text = description
 
-            Glide.with(itemView)
-                .load(story.photoUrl)
-                .centerCrop()
-                .placeholder(R.color.black)
-                .into(storyImageView)
+                Glide.with(itemView)
+                    .load(photoUrl)
+                    .centerCrop()
+                    .placeholder(R.color.black)
+                    .into(storyImageView)
+            }
         }
     }
 }
-

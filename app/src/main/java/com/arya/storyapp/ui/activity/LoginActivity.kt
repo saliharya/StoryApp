@@ -12,15 +12,15 @@ import com.arya.storyapp.ui.viewmodel.LoginViewModel
 import com.arya.storyapp.util.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
 
-    @Inject
-    lateinit var dataStoreManager: DataStoreManager
+    private val dataStoreManager: DataStoreManager by lazy {
+        DataStoreManager(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

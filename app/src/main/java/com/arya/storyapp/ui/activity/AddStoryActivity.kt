@@ -1,12 +1,13 @@
 package com.arya.storyapp.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.arya.storyapp.R
+import androidx.appcompat.app.AppCompatActivity
+import com.arya.storyapp.databinding.ActivityAddStoryBinding
 
 class AddStoryActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityAddStoryBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_story)
+        setContentView(binding.root)
     }
 }

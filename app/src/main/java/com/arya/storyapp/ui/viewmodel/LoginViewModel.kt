@@ -20,17 +20,20 @@ class LoginViewModel @Inject constructor(
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            try {
-                val response = authService.loginUser(UserLoginRequest(email, password))
+            runCatching {
+                authService.loginUser(UserLoginRequest(email, password))
+            }.onSuccess { response ->
                 response.body()?.let { loginResponse ->
                     if (response.isSuccessful && !loginResponse.error) {
-                        loginResult.value = loginResponse.loginResult
-                        dataStoreManager.saveToken(loginResponse.loginResult?.token ?: "")
+                        loginResponse.loginResult?.let { result ->
+                            loginResult.value = result
+                            dataStoreManager.saveToken(result.token)
+                        } ?: run { loginResult.value = null }
                     } else {
                         loginResult.value = null
                     }
                 } ?: run { loginResult.value = null }
-            } catch (e: Exception) {
+            }.onFailure {
                 loginResult.value = null
             }
         }

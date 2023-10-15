@@ -19,23 +19,22 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnRegister.setOnClickListener {
-            viewModel.registerUser(
-                binding.edRegisterName.text.toString(),
-                binding.edRegisterEmail.text.toString(),
-                binding.edRegisterPassword.text.toString()
-            )
+            val name = binding.edRegisterName.text.toString()
+            val email = binding.edRegisterEmail.text.toString()
+            val password = binding.edRegisterPassword.text.toString()
+            viewModel.registerUser(name, email, password)
         }
 
         viewModel.registrationResult.observe(this) { isSuccessful ->
-            val message = if (isSuccessful) {
-                getString(R.string.registration_success)
-            } else {
-                getString(R.string.registration_failure)
-            }
-
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            val messageRes =
+                if (isSuccessful) R.string.registration_success else R.string.registration_failure
+            showToast(messageRes)
 
             if (isSuccessful) finish()
         }
+    }
+
+    private fun showToast(messageRes: Int) {
+        Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
     }
 }

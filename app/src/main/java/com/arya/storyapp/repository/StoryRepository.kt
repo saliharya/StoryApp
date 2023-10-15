@@ -5,7 +5,12 @@ import com.arya.storyapp.api.StoryService
 import retrofit2.Call
 
 class StoryRepository(private val storyService: StoryService) {
+
     fun getAllStories(token: String, page: Int?, size: Int?, location: Int): Call<StoryResponse> {
         return storyService.getAllStories(page, size, location, "Bearer $token")
+    }
+
+    fun getStoryDetails(token: String, storyId: String): Call<StoryResponse> {
+        return storyService.getStoryDetails(storyId, "Bearer $token")
     }
 }

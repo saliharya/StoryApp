@@ -1,5 +1,6 @@
 package com.arya.storyapp.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arya.storyapp.R
 import com.arya.storyapp.model.Story
+import com.arya.storyapp.ui.activity.StoryDetailActivity
 import com.bumptech.glide.Glide
 
 class ListStoryAdapter :
@@ -22,6 +24,11 @@ class ListStoryAdapter :
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = getItem(position)
         holder.bind(story)
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, StoryDetailActivity::class.java)
+            intent.putExtra("story", story)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

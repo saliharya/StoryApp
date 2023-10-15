@@ -50,9 +50,7 @@ class StoryDetailActivity : AppCompatActivity() {
 
         viewModel.isLoadingLiveData.observe(this) { isLoading ->
             if (isLoading) {
-                // Show loading UI or perform any related tasks
             } else {
-                // Hide loading UI or perform any related tasks
             }
         }
     }

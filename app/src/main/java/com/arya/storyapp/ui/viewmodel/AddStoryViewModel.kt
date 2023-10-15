@@ -22,16 +22,12 @@ class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
                     call: Call<StoryResponse>,
                     response: Response<StoryResponse>
                 ) {
-                    // Handle success response here
                     if (response.isSuccessful) {
-                        // Handle successful response
                     } else {
-                        // Handle error response
                     }
                 }
 
                 override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
-                    // Handle failure here
                 }
             })
     }

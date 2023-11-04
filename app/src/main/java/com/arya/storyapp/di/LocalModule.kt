@@ -1,7 +1,7 @@
 package com.arya.storyapp.di
 
 import android.content.Context
-import com.arya.storyapp.util.DataStoreManager
+import com.arya.storyapp.local.DataStoreManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

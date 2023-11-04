@@ -30,7 +30,6 @@ class AddStoryActivity : AppCompatActivity() {
         binding.btnCamera.setOnClickListener { startCamera() }
         binding.btnUpload.setOnClickListener { uploadImage() }
 
-        // Observe successLiveData and navigate to the main activity on success
         viewModel.successLiveData.observe(this) { success ->
             if (success) {
                 showToast("Story uploaded successfully")
@@ -46,22 +45,19 @@ class AddStoryActivity : AppCompatActivity() {
             return
         }
 
-        val lat = 0.0f // Replace with the actual latitude
-        val lon = 0.0f // Replace with the actual longitude
+        val lat = 0.0f
+        val lon = 0.0f
 
         currentImageUri?.let { uri ->
             val file = uriToFile(uri, this)
 
-            // Call the view model to upload the story
             viewModel.addStory(description, file, lat, lon)
 
-            // Show loading indicator if needed
             showLoading(true)
         } ?: showToast("Please select an image")
     }
 
     private fun showLoading(isLoading: Boolean) {
-        // You can add loading indicator code here
     }
 
     private fun showToast(message: String) {
@@ -104,11 +100,9 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainActivity() {
-        // Create an intent to go back to the main activity
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
 
-        // Start the main activity and finish this activity
         startActivity(intent)
         finish()
     }

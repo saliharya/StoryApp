@@ -1,4 +1,4 @@
-package com.arya.storyapp.util
+package com.arya.storyapp.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -35,6 +35,6 @@ class DataStoreManager(context: Context) {
     }
 
     suspend fun getToken(): String? {
-        return tokenFlow.first() // This suspends until the token is available
+        return tokenFlow.first()
     }
 }

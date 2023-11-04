@@ -76,7 +76,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edRegisterName" />
 
-    <com.arya.storyapp.util.PasswordEditText
+    <com.arya.storyapp.ui.customview.PasswordEditText
         android:id="@+id/edRegisterPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

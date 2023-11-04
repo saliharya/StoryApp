@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arya.storyapp.api.StoryResponse
+import com.arya.storyapp.remote.response.StoryResponse
 import com.arya.storyapp.repository.StoryRepository
-import com.arya.storyapp.util.DataStoreManager
+import com.arya.storyapp.local.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.await
@@ -33,12 +33,10 @@ class AddStoryViewModel @Inject constructor(
                     val response =
                         storyRepository.addStory(token, description, photoFile, lat, lon).await()
                     _responseLiveData.value = response
-                    _successLiveData.value = true // Set success to true
+                    _successLiveData.value = true
                 } catch (e: Exception) {
-                    // Handle the exception
                 }
             } else {
-                // Handle the case when the token is not available
             }
         }
     }

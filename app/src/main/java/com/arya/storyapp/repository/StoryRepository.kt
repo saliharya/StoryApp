@@ -1,15 +1,18 @@
 package com.arya.storyapp.repository
 
-import com.arya.storyapp.api.StoryResponse
-import com.arya.storyapp.api.StoryService
+import com.arya.storyapp.remote.response.StoryResponse
+import com.arya.storyapp.remote.service.StoryService
+import dagger.hilt.android.scopes.ViewModelScoped
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import java.io.File
+import javax.inject.Inject
 
-class StoryRepository(private val storyService: StoryService) {
+@ViewModelScoped
+class StoryRepository @Inject constructor(private val storyService: StoryService) {
 
     fun getAllStories(token: String, page: Int?, size: Int?, location: Int): Call<StoryResponse> {
         return storyService.getAllStories(

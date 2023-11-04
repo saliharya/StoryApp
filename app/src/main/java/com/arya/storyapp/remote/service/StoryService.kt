@@ -1,5 +1,6 @@
-package com.arya.storyapp.api
+package com.arya.storyapp.remote.service
 
+import com.arya.storyapp.remote.response.StoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

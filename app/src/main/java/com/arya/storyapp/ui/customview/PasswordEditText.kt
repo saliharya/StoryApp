@@ -1,4 +1,4 @@
-package com.arya.storyapp.util
+package com.arya.storyapp.ui.customview
 
 import android.content.Context
 import android.util.AttributeSet

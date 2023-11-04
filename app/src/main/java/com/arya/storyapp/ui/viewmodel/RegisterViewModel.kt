@@ -3,8 +3,8 @@ package com.arya.storyapp.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arya.storyapp.api.AuthService
-import com.arya.storyapp.api.UserRegistrationRequest
+import com.arya.storyapp.remote.service.AuthService
+import com.arya.storyapp.remote.request.UserRegistrationRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityLoginBinding
 import com.arya.storyapp.ui.viewmodel.LoginViewModel
-import com.arya.storyapp.util.DataStoreManager
+import com.arya.storyapp.local.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -50,7 +50,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

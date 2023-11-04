@@ -13,7 +13,7 @@ import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityMainBinding
 import com.arya.storyapp.ui.adapter.ListStoryAdapter
 import com.arya.storyapp.ui.viewmodel.MainViewModel
-import com.arya.storyapp.util.DataStoreManager
+import com.arya.storyapp.local.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

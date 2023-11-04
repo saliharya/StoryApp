@@ -1,5 +1,8 @@
-package com.arya.storyapp.api
+package com.arya.storyapp.remote.service
 
+import com.arya.storyapp.remote.request.UserLoginRequest
+import com.arya.storyapp.remote.response.UserLoginResponse
+import com.arya.storyapp.remote.request.UserRegistrationRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

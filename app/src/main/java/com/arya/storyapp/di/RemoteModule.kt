@@ -1,7 +1,7 @@
 package com.arya.storyapp.di
 
-import com.arya.storyapp.api.AuthService
-import com.arya.storyapp.api.StoryService
+import com.arya.storyapp.remote.service.AuthService
+import com.arya.storyapp.remote.service.StoryService
 import com.arya.storyapp.repository.StoryRepository
 import dagger.Module
 import dagger.Provides

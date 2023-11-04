@@ -11,7 +11,7 @@ import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityStoryDetailBinding
 import com.arya.storyapp.model.Story
 import com.arya.storyapp.ui.viewmodel.StoryDetailViewModel
-import com.arya.storyapp.util.DataStoreManager
+import com.arya.storyapp.local.DataStoreManager
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

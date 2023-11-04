@@ -1,4 +1,4 @@
-package com.arya.storyapp.api
+package com.arya.storyapp.remote.request
 
 data class UserLoginRequest(
     val email: String,

@@ -1,34 +1,45 @@
-package com.arya.storyapp.viewmodel
+package com.arya.storyapp.ui.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.arya.storyapp.api.StoryResponse
 import com.arya.storyapp.repository.StoryRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.arya.storyapp.util.DataStoreManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import retrofit2.await
+import java.io.File
+import javax.inject.Inject
 
-class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
+@HiltViewModel
+class AddStoryViewModel @Inject constructor(
+    private val storyRepository: StoryRepository,
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
 
-    fun addNewStory(
-        token: String,
-        description: String,
-        photoPath: String,
-        lat: Float?,
-        lon: Float?
-    ) {
-        repository.addNewStory(token, description, photoPath, lat, lon)
-            .enqueue(object : Callback<StoryResponse> {
-                override fun onResponse(
-                    call: Call<StoryResponse>,
-                    response: Response<StoryResponse>
-                ) {
-                    if (response.isSuccessful) {
-                    } else {
-                    }
+    private val _responseLiveData = MutableLiveData<StoryResponse>()
+    val responseLiveData: LiveData<StoryResponse> = _responseLiveData
+
+    private val _successLiveData = MutableLiveData<Boolean>()
+    val successLiveData: LiveData<Boolean> get() = _successLiveData
+
+    fun addStory(description: String, photoFile: File, lat: Float?, lon: Float?) {
+        viewModelScope.launch {
+            val token = dataStoreManager.getToken()
+            if (token != null) {
+                try {
+                    val response =
+                        storyRepository.addStory(token, description, photoFile, lat, lon).await()
+                    _responseLiveData.value = response
+                    _successLiveData.value = true // Set success to true
+                } catch (e: Exception) {
+                    // Handle the exception
                 }
-
-                override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
-                }
-            })
+            } else {
+                // Handle the case when the token is not available
+            }
+        }
     }
 }

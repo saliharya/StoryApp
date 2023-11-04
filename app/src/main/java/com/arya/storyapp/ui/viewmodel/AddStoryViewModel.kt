@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.remote.response.StoryResponse
 import com.arya.storyapp.repository.StoryRepository
-import com.arya.storyapp.local.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.await
@@ -20,7 +20,7 @@ class AddStoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _responseLiveData = MutableLiveData<StoryResponse>()
-    val responseLiveData: LiveData<StoryResponse> = _responseLiveData
+    val responseLiveData: LiveData<StoryResponse> get() = _responseLiveData
 
     private val _successLiveData = MutableLiveData<Boolean>()
     val successLiveData: LiveData<Boolean> get() = _successLiveData
@@ -28,6 +28,7 @@ class AddStoryViewModel @Inject constructor(
     fun addStory(description: String, photoFile: File, lat: Float?, lon: Float?) {
         viewModelScope.launch {
             val token = dataStoreManager.getToken()
+
             if (token != null) {
                 try {
                     val response =
@@ -35,8 +36,8 @@ class AddStoryViewModel @Inject constructor(
                     _responseLiveData.value = response
                     _successLiveData.value = true
                 } catch (e: Exception) {
+                    // Handle the exception if needed
                 }
-            } else {
             }
         }
     }

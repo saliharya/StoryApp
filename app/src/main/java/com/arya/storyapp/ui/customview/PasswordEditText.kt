@@ -2,21 +2,24 @@ package com.arya.storyapp.ui.customview
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.widget.addTextChangedListener
 
 class PasswordEditText(context: Context, attrs: AttributeSet) :
-    androidx.appcompat.widget.AppCompatEditText(context, attrs) {
-    override fun onTextChanged(
-        text: CharSequence?,
-        start: Int,
-        lengthBefore: Int,
-        lengthAfter: Int
-    ) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+    AppCompatEditText(context, attrs) {
 
-        error = if ((text?.length ?: 0) < 8) {
-            "Password must be at least 8 characters long."
-        } else {
-            null
+    init {
+        setOnTextChangedListener()
+    }
+
+    private fun setOnTextChangedListener() {
+        addTextChangedListener { text ->
+            val errorMessage = if ((text?.length ?: 0) < 8) {
+                "Password must be at least 8 characters long."
+            } else {
+                null
+            }
+            setError(errorMessage, null)
         }
     }
 }

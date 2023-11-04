@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arya.storyapp.remote.response.StoryResponse
-import com.arya.storyapp.model.Story
-import com.arya.storyapp.repository.StoryRepository
 import com.arya.storyapp.local.DataStoreManager
+import com.arya.storyapp.model.Story
+import com.arya.storyapp.remote.response.StoryResponse
+import com.arya.storyapp.repository.StoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -54,13 +54,13 @@ class MainViewModel @Inject constructor(
                 ) {
                     _isLoadingLiveData.value = false
 
-                    response.body()?.let { storyResponse ->
-                        if (response.isSuccessful) {
-                            _responseLiveData.value = storyResponse.listStory
-                        } else {
-                            handleApiError(response.errorBody()?.string())
-                        }
-                    } ?: run { handleApiError("Failed to fetch stories") }
+                    if (response.isSuccessful) {
+                        response.body()?.listStory?.let { storyList ->
+                            _responseLiveData.value = storyList
+                        } ?: run { handleApiError("Failed to fetch stories") }
+                    } else {
+                        handleApiError(response.errorBody()?.string())
+                    }
                 }
 
                 override fun onFailure(call: Call<StoryResponse>, t: Throwable) {

@@ -1,12 +1,13 @@
 package com.arya.storyapp.ui.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arya.storyapp.remote.service.AuthService
-import com.arya.storyapp.remote.response.LoginResult
-import com.arya.storyapp.remote.request.UserLoginRequest
 import com.arya.storyapp.local.DataStoreManager
+import com.arya.storyapp.remote.request.UserLoginRequest
+import com.arya.storyapp.remote.response.LoginResult
+import com.arya.storyapp.remote.service.AuthService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,25 +17,31 @@ class LoginViewModel @Inject constructor(
     private val authService: AuthService,
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
-    val loginResult = MutableLiveData<LoginResult?>()
+    private val _loginResult = MutableLiveData<LoginResult?>()
+    val loginResult: LiveData<LoginResult?> get() = _loginResult
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            runCatching {
-                authService.loginUser(UserLoginRequest(email, password))
-            }.onSuccess { response ->
-                response.body()?.let { loginResponse ->
-                    if (response.isSuccessful && !loginResponse.error) {
-                        loginResponse.loginResult?.let { result ->
-                            loginResult.value = result
+            try {
+                val response = authService.loginUser(UserLoginRequest(email, password))
+
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+
+                    if (loginResponse?.error == false) {
+                        val result = loginResponse.loginResult
+
+                        if (result != null) {
+                            _loginResult.value = result
                             dataStoreManager.saveToken(result.token)
-                        } ?: run { loginResult.value = null }
-                    } else {
-                        loginResult.value = null
+                            return@launch
+                        }
                     }
-                } ?: run { loginResult.value = null }
-            }.onFailure {
-                loginResult.value = null
+                }
+
+                _loginResult.value = null
+            } catch (e: Exception) {
+                _loginResult.value = null
             }
         }
     }

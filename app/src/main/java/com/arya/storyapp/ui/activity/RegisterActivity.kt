@@ -18,13 +18,20 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setupClickListeners()
+        observeRegistrationResult()
+    }
+
+    private fun setupClickListeners() {
         binding.btnRegister.setOnClickListener {
             val name = binding.edRegisterName.text.toString()
             val email = binding.edRegisterEmail.text.toString()
             val password = binding.edRegisterPassword.text.toString()
             viewModel.registerUser(name, email, password)
         }
+    }
 
+    private fun observeRegistrationResult() {
         viewModel.registrationResult.observe(this) { isSuccessful ->
             val messageRes =
                 if (isSuccessful) R.string.registration_success else R.string.registration_failure

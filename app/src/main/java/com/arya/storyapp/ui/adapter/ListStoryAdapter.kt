@@ -16,8 +16,7 @@ import com.arya.storyapp.model.Story
 import com.arya.storyapp.ui.activity.StoryDetailActivity
 import com.bumptech.glide.Glide
 
-class ListStoryAdapter :
-    ListAdapter<Story, ListStoryAdapter.StoryViewHolder>(StoryDiffCallback()) {
+class ListStoryAdapter : ListAdapter<Story, ListStoryAdapter.StoryViewHolder>(StoryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_story, parent, false)
@@ -28,18 +27,18 @@ class ListStoryAdapter :
         val story = getItem(position)
         holder.bind(story)
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, StoryDetailActivity::class.java)
-            intent.putExtra("story", story)
+            val intent = Intent(holder.itemView.context, StoryDetailActivity::class.java).apply {
+                putExtra("story", story)
+            }
 
-            val optionsCompat: ActivityOptionsCompat =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    holder.itemView.context as Activity,
-                    Pair(holder.storyImageView, "image"),
-                    Pair(holder.usernameTextView, "username"),
-                    Pair(holder.descriptionTextView, "description")
-                )
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                holder.itemView.context as Activity,
+                Pair(holder.storyImageView, "image"),
+                Pair(holder.usernameTextView, "username"),
+                Pair(holder.descriptionTextView, "description")
+            )
 
-            holder.itemView.context.startActivity(intent, optionsCompat.toBundle())
+            holder.itemView.context.startActivity(intent, options.toBundle())
         }
     }
 

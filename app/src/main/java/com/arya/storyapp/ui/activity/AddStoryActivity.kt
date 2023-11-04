@@ -26,10 +26,17 @@ class AddStoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setupClickListeners()
+        observeSuccessLiveData()
+    }
+
+    private fun setupClickListeners() {
         binding.btnGallery.setOnClickListener { startGallery() }
         binding.btnCamera.setOnClickListener { startCamera() }
         binding.btnUpload.setOnClickListener { uploadImage() }
+    }
 
+    private fun observeSuccessLiveData() {
         viewModel.successLiveData.observe(this) { success ->
             if (success) {
                 showToast("Story uploaded successfully")
@@ -50,14 +57,13 @@ class AddStoryActivity : AppCompatActivity() {
 
         currentImageUri?.let { uri ->
             val file = uriToFile(uri, this)
-
             viewModel.addStory(description, file, lat, lon)
-
             showLoading(true)
         } ?: showToast("Please select an image")
     }
 
     private fun showLoading(isLoading: Boolean) {
+        // Implement loading indicator logic here
     }
 
     private fun showToast(message: String) {
@@ -102,7 +108,6 @@ class AddStoryActivity : AppCompatActivity() {
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-
         startActivity(intent)
         finish()
     }

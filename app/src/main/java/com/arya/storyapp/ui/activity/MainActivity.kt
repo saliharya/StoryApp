@@ -11,9 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityMainBinding
+import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.ui.adapter.ListStoryAdapter
 import com.arya.storyapp.ui.viewmodel.MainViewModel
-import com.arya.storyapp.local.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,9 +22,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewModel: MainViewModel by viewModels()
-    private val dataStoreManager: DataStoreManager by lazy {
-        DataStoreManager(this)
-    }
+    private val dataStoreManager: DataStoreManager by lazy { DataStoreManager(this) }
 
     private val storiesAdapter = ListStoryAdapter()
 
@@ -33,13 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        binding.btnAddStory.setOnClickListener {
-            navigateToAddStory()
-        }
-
-        setupRecyclerView()
-        observeViewModel()
-        observeTokenAndLoadStories()
+        setupUI()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,10 +42,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
-                lifecycleScope.launch {
-                    dataStoreManager.clearToken()
-                    navigateToLogin()
-                }
+                logoutAndNavigateToLogin()
                 true
             }
 
@@ -61,21 +50,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView() = with(binding.rvStories) {
-        layoutManager = LinearLayoutManager(this@MainActivity)
-        adapter = storiesAdapter
+    private fun setupUI() {
+        binding.btnAddStory.setOnClickListener { navigateToAddStory() }
+        setupRecyclerView()
+        observeViewModel()
+        observeTokenAndLoadStories()
     }
 
-    private fun observeViewModel() = with(viewModel) {
-        responseLiveData.observe(this@MainActivity) { stories ->
-            storiesAdapter.submitList(stories)
-        }
+    private fun setupRecyclerView() {
+        binding.rvStories.layoutManager = LinearLayoutManager(this)
+        binding.rvStories.adapter = storiesAdapter
+    }
 
-        errorLiveData.observe(this@MainActivity) { error ->
-            Toast.makeText(this@MainActivity, error, Toast.LENGTH_SHORT).show()
-        }
+    private fun observeViewModel() {
+        with(viewModel) {
+            responseLiveData.observe(this@MainActivity) { stories ->
+                storiesAdapter.submitList(stories)
+            }
 
-        isLoadingLiveData.observe(this@MainActivity) {
+            errorLiveData.observe(this@MainActivity) { error ->
+                showToast(error)
+            }
         }
     }
 
@@ -86,6 +81,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun logoutAndNavigateToLogin() {
+        lifecycleScope.launch {
+            dataStoreManager.clearToken()
+            navigateToLogin()
+        }
+    }
+
     private fun navigateToLogin() {
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         finish()
@@ -93,5 +95,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToAddStory() {
         startActivity(Intent(this@MainActivity, AddStoryActivity::class.java))
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 }

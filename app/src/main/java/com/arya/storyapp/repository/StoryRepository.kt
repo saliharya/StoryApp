@@ -16,8 +16,7 @@ class StoryRepository @Inject constructor(private val storyService: StoryService
 
     fun getAllStories(token: String, page: Int?, size: Int?, location: Int): Call<StoryResponse> {
         return storyService.getAllStories(
-            page,
-            size, location, "Bearer $token"
+            page, size, location, "Bearer $token"
         )
     }
 

@@ -21,4 +21,6 @@
     <string name="gallery_button_text">Gallery</string>
     <string name="description">Description</string>
     <string name="upload_button_text">Upload</string>
+    <string name="open_maps_button">Open Maps Button</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

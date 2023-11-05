@@ -48,9 +48,13 @@ class StoryDetailActivity : AppCompatActivity() {
             .centerCrop()
             .placeholder(R.color.black)
             .into(binding.ivStory)
+        binding.ivStory.transitionName = "image"
 
         binding.tvUsername.text = story.name
+        binding.tvUsername.transitionName = "username"
+
         binding.tvDescription.text = story.description
+        binding.tvDescription.transitionName = "description"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

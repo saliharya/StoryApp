@@ -1,8 +1,10 @@
 package com.arya.storyapp.di
 
+import androidx.lifecycle.ViewModelProvider
 import com.arya.storyapp.remote.service.AuthService
 import com.arya.storyapp.remote.service.StoryService
 import com.arya.storyapp.repository.StoryRepository
+import com.arya.storyapp.ui.viewmodel.MapsViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

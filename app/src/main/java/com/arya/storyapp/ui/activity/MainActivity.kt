@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.btnAddStory.setOnClickListener { navigateToAddStory() }
+        binding.btnMaps.setOnClickListener { navigateToMaps() }
         setupRecyclerView()
         observeViewModel()
         observeTokenAndLoadStories()
@@ -95,6 +96,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToAddStory() {
         startActivity(Intent(this@MainActivity, AddStoryActivity::class.java))
+    }
+
+    private fun navigateToMaps() {
+        startActivity(Intent(this@MainActivity, MapsActivity::class.java))
     }
 
     private fun showToast(message: String) {

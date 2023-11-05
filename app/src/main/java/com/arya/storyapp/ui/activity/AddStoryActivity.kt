@@ -22,11 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddStoryActivity : AppCompatActivity() {
+
     private val binding by lazy { ActivityAddStoryBinding.inflate(layoutInflater) }
     private val viewModel: AddStoryViewModel by viewModels()
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private var currentImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,17 +34,10 @@ class AddStoryActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        setupClickListeners()
-        observeSuccessLiveData()
-    }
-
-    private fun setupClickListeners() {
         binding.btnGallery.setOnClickListener { startGallery() }
         binding.btnCamera.setOnClickListener { startCamera() }
         binding.btnUpload.setOnClickListener { uploadImage() }
-    }
 
-    private fun observeSuccessLiveData() {
         viewModel.successLiveData.observe(this) { success ->
             if (success) {
                 showToast("Story uploaded successfully")
@@ -54,13 +46,6 @@ class AddStoryActivity : AppCompatActivity() {
         }
     }
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                uploadImage()
-            }
-        }
-
     private fun uploadImage() {
         val description = binding.etDescription.text.toString()
         if (description.isBlank()) {
@@ -68,14 +53,10 @@ class AddStoryActivity : AppCompatActivity() {
             return
         }
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (checkLocationPermission()) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                val lat = location.latitude.toFloat()
-                val lon = location.longitude.toFloat()
+                val lat = location?.latitude?.toFloat()
+                val lon = location?.longitude?.toFloat()
 
                 currentImageUri?.let { uri ->
                     val file = uriToFile(uri, this)
@@ -83,11 +64,20 @@ class AddStoryActivity : AppCompatActivity() {
                 } ?: showToast("Please select an image")
             }
         } else {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            requestLocationPermission()
         }
     }
 
+    private fun checkLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
+    private fun requestLocationPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -98,27 +88,8 @@ class AddStoryActivity : AppCompatActivity() {
         launcherIntentCamera.launch(currentImageUri)
     }
 
-    private val launcherIntentCamera = registerForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { isSuccess ->
-        if (isSuccess) {
-            showImage()
-        }
-    }
-
     private fun startGallery() {
         launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
-
-    private val launcherGallery = registerForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            currentImageUri = uri
-            showImage()
-        } else {
-            Log.d("Photo Picker", "No media selected")
-        }
     }
 
     private fun showImage() {
@@ -133,5 +104,32 @@ class AddStoryActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+    }
+
+    private val launcherIntentCamera = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { isSuccess ->
+        if (isSuccess) {
+            showImage()
+        }
+    }
+
+    private val launcherGallery = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            currentImageUri = uri
+            showImage()
+        } else {
+            Log.d("Photo Picker", "No media selected")
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            uploadImage()
+        }
     }
 }

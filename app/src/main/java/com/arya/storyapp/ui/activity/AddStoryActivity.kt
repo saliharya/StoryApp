@@ -1,10 +1,8 @@
 package com.arya.storyapp.ui.activity
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +11,13 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.arya.storyapp.databinding.ActivityAddStoryBinding
 import com.arya.storyapp.ui.viewmodel.AddStoryViewModel
 import com.arya.storyapp.util.getImageUri
 import com.arya.storyapp.util.uriToFile
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,11 +25,15 @@ class AddStoryActivity : AppCompatActivity() {
     private val binding by lazy { ActivityAddStoryBinding.inflate(layoutInflater) }
     private val viewModel: AddStoryViewModel by viewModels()
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private var currentImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setupClickListeners()
         observeSuccessLiveData()
@@ -50,6 +54,13 @@ class AddStoryActivity : AppCompatActivity() {
         }
     }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                uploadImage()
+            }
+        }
+
     private fun uploadImage() {
         val description = binding.etDescription.text.toString()
         if (description.isBlank()) {
@@ -57,19 +68,25 @@ class AddStoryActivity : AppCompatActivity() {
             return
         }
 
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        val lat = location?.latitude?.toFloat() ?: 0.0f
-        val lon = location?.longitude?.toFloat() ?: 0.0f
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                val lat = location.latitude.toFloat()
+                val lon = location.longitude.toFloat()
 
-        currentImageUri?.let { uri ->
-            val file = uriToFile(uri, this)
-            viewModel.addStory(description, file, lat, lon)
-        } ?: showToast("Please select an image")
+                currentImageUri?.let { uri ->
+                    val file = uriToFile(uri, this)
+                    viewModel.addStory(description, file, lat, lon)
+                } ?: showToast("Please select an image")
+            }
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
     }
+
 
 
     private fun showToast(message: String) {

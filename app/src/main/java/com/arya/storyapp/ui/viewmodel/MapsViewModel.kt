@@ -11,6 +11,4 @@ class MapsViewModel @Inject constructor(private val storyRepository: StoryReposi
 
     fun getAllStories(token: String, location: Int) =
         storyRepository.getAllStories(token, null, null, location)
-
-    // Add any other methods or LiveData as needed for your use case
 }

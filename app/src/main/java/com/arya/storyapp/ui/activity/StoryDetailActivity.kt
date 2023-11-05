@@ -37,8 +37,8 @@ class StoryDetailActivity : AppCompatActivity() {
         val story: Story? = intent.getParcelableExtra("story")
         story?.let { displayStoryDetails(it) }
 
-        viewModel.isLoadingLiveData.observe(this) { isLoading ->
-            // Handle loading indicator if needed
+        viewModel.isLoadingLiveData.observe(this) {
+            //implementasi kemudian
         }
     }
 

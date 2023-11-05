@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.13.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("androidx.multidex:multidex:2.0.1")

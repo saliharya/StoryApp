@@ -58,12 +58,7 @@ class AddStoryActivity : AppCompatActivity() {
         currentImageUri?.let { uri ->
             val file = uriToFile(uri, this)
             viewModel.addStory(description, file, lat, lon)
-            showLoading(true)
         } ?: showToast("Please select an image")
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        // Implement loading indicator logic here
     }
 
     private fun showToast(message: String) {

@@ -20,7 +20,6 @@ class AddStoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _responseLiveData = MutableLiveData<StoryResponse>()
-    val responseLiveData: LiveData<StoryResponse> get() = _responseLiveData
 
     private val _successLiveData = MutableLiveData<Boolean>()
     val successLiveData: LiveData<Boolean> get() = _successLiveData
@@ -35,8 +34,7 @@ class AddStoryViewModel @Inject constructor(
                         storyRepository.addStory(token, description, photoFile, lat, lon).await()
                     _responseLiveData.value = response
                     _successLiveData.value = true
-                } catch (e: Exception) {
-                    // Handle the exception if needed
+                } catch (_: Exception) {
                 }
             }
         }

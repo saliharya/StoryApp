@@ -29,7 +29,6 @@ class MainViewModel @Inject constructor(
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
     private val _isLoadingLiveData = MutableLiveData<Boolean>()
-    val isLoadingLiveData: LiveData<Boolean> get() = _isLoadingLiveData
 
     fun getAllStories(bearerToken: String) {
         _isLoadingLiveData.value = true

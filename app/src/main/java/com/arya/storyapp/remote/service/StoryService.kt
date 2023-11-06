@@ -20,6 +20,12 @@ interface StoryService {
         @Header("Authorization") token: String
     ): Call<StoryResponse>
 
+    @GET("stories")
+    fun getStoriesWithLocation(
+        @Query("location") location: Int = 1,
+        @Header("Authorization") token: String,
+    ): Call<StoryResponse>
+
     @Multipart
     @POST("stories")
     fun addStory(

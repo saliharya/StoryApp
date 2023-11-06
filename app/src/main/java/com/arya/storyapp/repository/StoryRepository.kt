@@ -20,6 +20,10 @@ class StoryRepository @Inject constructor(private val storyService: StoryService
         )
     }
 
+    fun getStoriesWithLocation(location: Int, token: String): Call<StoryResponse> {
+        return storyService.getStoriesWithLocation(location, "Bearer $token")
+    }
+
     fun addStory(
         token: String,
         description: String,

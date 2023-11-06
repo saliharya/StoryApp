@@ -44,9 +44,7 @@ object RemoteModule {
     }
 
     @Provides
-    fun provideAuthRepository(
-        authService: AuthService
-    ): AuthRepository {
+    fun provideAuthRepository(authService: AuthService): AuthRepository {
         return AuthRepository(authService)
     }
 }

@@ -1,19 +1,20 @@
 package com.arya.storyapp.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.model.Story
-import com.arya.storyapp.remote.response.StoryResponse
 import com.arya.storyapp.repository.StoryRepository
+import com.arya.storyapp.ui.adapter.StoryPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,55 +23,40 @@ class MainViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
-    private val _responseLiveData = MutableLiveData<List<Story>>()
-    val responseLiveData: LiveData<List<Story>> get() = _responseLiveData
+    private val _responseLiveData = MutableLiveData<PagingData<Story>>()
+    val responseLiveData: LiveData<PagingData<Story>> get() = _responseLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
     private val _isLoadingLiveData = MutableLiveData<Boolean>()
+    val isLoadingLiveData: LiveData<Boolean> get() = _isLoadingLiveData
 
-    fun getAllStories(bearerToken: String) {
-        _isLoadingLiveData.value = true
+    private var currentLocation: Int = 0
 
+    fun getAllStories(location: Int) {
         viewModelScope.launch {
-            dataStoreManager.tokenFlow.collect { token ->
+            try {
+                val token = dataStoreManager.getToken()
                 if (token != null) {
-                    loadStories(bearerToken)
+                    currentLocation = location
+                    val factory = { StoryPagingSource(storyRepository, token, location) }
+                    val config = PagingConfig(pageSize = 20, enablePlaceholders = false)
+                    val storiesFlow = Pager(config = config, pagingSourceFactory = factory).flow
+                    _isLoadingLiveData.value = true
+                    storiesFlow.cachedIn(viewModelScope).collectLatest { pagingData ->
+                        _responseLiveData.value = pagingData
+                        _isLoadingLiveData.value = false
+                    }
                 } else {
                     _isLoadingLiveData.value = false
+                    _errorLiveData.value = "Token not found"
                 }
+            } catch (e: Exception) {
+                _isLoadingLiveData.value = false
+                _errorLiveData.value = "Failed to fetch stories"
             }
         }
     }
-
-    private fun loadStories(bearerToken: String) {
-        storyRepository.getAllStories(bearerToken, null, null, 0)
-            .enqueue(object : Callback<StoryResponse> {
-                override fun onResponse(
-                    call: Call<StoryResponse>,
-                    response: Response<StoryResponse>
-                ) {
-                    _isLoadingLiveData.value = false
-
-                    if (response.isSuccessful) {
-                        response.body()?.listStory?.let { storyList ->
-                            _responseLiveData.value = storyList
-                        } ?: run { handleApiError("Failed to fetch stories") }
-                    } else {
-                        handleApiError(response.errorBody()?.string())
-                    }
-                }
-
-                override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
-                    _isLoadingLiveData.value = false
-                    _errorLiveData.value = "Network error occurred"
-                }
-            })
-    }
-
-    private fun handleApiError(errorString: String?) {
-        Log.e("API_ERROR", "Error: $errorString")
-        _errorLiveData.value = "Failed to fetch stories"
-    }
 }
+

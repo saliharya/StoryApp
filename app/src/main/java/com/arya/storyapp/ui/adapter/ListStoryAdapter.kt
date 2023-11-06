@@ -9,14 +9,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arya.storyapp.R
 import com.arya.storyapp.model.Story
 import com.arya.storyapp.ui.activity.StoryDetailActivity
 import com.bumptech.glide.Glide
 
-class ListStoryAdapter : ListAdapter<Story, ListStoryAdapter.StoryViewHolder>(StoryDiffCallback()) {
+class ListStoryAdapter :
+    PagingDataAdapter<Story, ListStoryAdapter.StoryViewHolder>(StoryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_story, parent, false)
@@ -25,7 +26,7 @@ class ListStoryAdapter : ListAdapter<Story, ListStoryAdapter.StoryViewHolder>(St
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = getItem(position)
-        holder.bind(story)
+        story?.let { holder.bind(it) }
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, StoryDetailActivity::class.java).apply {
                 putExtra("story", story)

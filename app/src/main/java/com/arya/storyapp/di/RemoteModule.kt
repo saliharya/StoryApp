@@ -2,6 +2,7 @@ package com.arya.storyapp.di
 
 import com.arya.storyapp.remote.service.AuthService
 import com.arya.storyapp.remote.service.StoryService
+import com.arya.storyapp.repository.AuthRepository
 import com.arya.storyapp.repository.StoryRepository
 import dagger.Module
 import dagger.Provides
@@ -40,5 +41,12 @@ object RemoteModule {
     @Singleton
     fun provideStoryRepository(storyService: StoryService): StoryRepository {
         return StoryRepository(storyService)
+    }
+
+    @Provides
+    fun provideAuthRepository(
+        authService: AuthService
+    ): AuthRepository {
+        return AuthRepository(authService)
     }
 }

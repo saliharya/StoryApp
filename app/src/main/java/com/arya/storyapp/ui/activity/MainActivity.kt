@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeViewModel() {
         with(viewModel) {
             responseLiveData.observe(this@MainActivity) { stories ->
-                storiesAdapter.submitList(stories)
+                storiesAdapter.submitData(lifecycle, stories)
             }
 
             errorLiveData.observe(this@MainActivity) { error ->
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeTokenAndLoadStories() = lifecycleScope.launch {
         dataStoreManager.tokenFlow.collectLatest { token ->
             if (token == null) navigateToLogin()
-            else viewModel.getAllStories(token)
+            else viewModel.getAllStories(0)
         }
     }
 

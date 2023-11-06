@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.remote.request.UserLoginRequest
 import com.arya.storyapp.remote.response.LoginResult
-import com.arya.storyapp.remote.service.AuthService
+import com.arya.storyapp.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authService: AuthService,
+    private val authRepository: AuthRepository,
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
     private val _loginResult = MutableLiveData<LoginResult?>()
@@ -23,7 +23,7 @@ class LoginViewModel @Inject constructor(
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             try {
-                val response = authService.loginUser(UserLoginRequest(email, password))
+                val response = authRepository.loginUser(UserLoginRequest(email, password))
 
                 if (response.isSuccessful) {
                     val loginResponse = response.body()

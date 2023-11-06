@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arya.storyapp.remote.request.UserRegistrationRequest
-import com.arya.storyapp.remote.service.AuthService
+import com.arya.storyapp.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val authService: AuthService) : ViewModel() {
+class RegisterViewModel @Inject constructor(private val authRepository: AuthRepository) :
+    ViewModel() {
     private val _registrationResult = MutableLiveData<Boolean>()
     val registrationResult: LiveData<Boolean> get() = _registrationResult
 
@@ -19,7 +20,7 @@ class RegisterViewModel @Inject constructor(private val authService: AuthService
         viewModelScope.launch {
             try {
                 val response =
-                    authService.registerUser(UserRegistrationRequest(name, email, password))
+                    authRepository.registerUser(UserRegistrationRequest(name, email, password))
                 _registrationResult.value = response.isSuccessful
             } catch (e: Exception) {
                 _registrationResult.value = false

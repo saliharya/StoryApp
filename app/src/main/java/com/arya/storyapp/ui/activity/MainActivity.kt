@@ -90,8 +90,4 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToMaps() {
         startActivity(Intent(this@MainActivity, MapsActivity::class.java))
     }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-    }
 }

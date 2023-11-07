@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.model.Story
 import com.arya.storyapp.repository.StoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,11 +24,9 @@ class MapsViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val stories = response.body()?.listStory ?: emptyList()
                     storiesLiveData.value = stories
-                } else {
-                    // Handle API request error
                 }
             } catch (e: Exception) {
-                // Handle exceptions
+                e.printStackTrace()
             }
         }
     }

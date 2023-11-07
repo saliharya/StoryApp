@@ -20,7 +20,9 @@
     <string name="camera_button_text">Camera</string>
     <string name="gallery_button_text">Gallery</string>
     <string name="description">Description</string>
+    <string name="story_uploaded_successfully">Story uploaded successfully</string>
     <string name="upload_button_text">Upload</string>
     <string name="open_maps_button">Open Maps Button</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="please_enter_a_description">Please enter a description</string>
 </resources>

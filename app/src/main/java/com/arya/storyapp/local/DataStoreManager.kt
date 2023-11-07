@@ -13,10 +13,6 @@ val Context.dataStore by preferencesDataStore("MyAppPreferences")
 class DataStoreManager(context: Context) {
     private val dataStore = context.dataStore
 
-    companion object {
-        val KEY_TOKEN = stringPreferencesKey("token")
-    }
-
     val tokenFlow: Flow<String?>
         get() = dataStore.data.map { preferences ->
             preferences[KEY_TOKEN]
@@ -36,5 +32,10 @@ class DataStoreManager(context: Context) {
 
     suspend fun getToken(): String? {
         return tokenFlow.first()
+    }
+
+
+    companion object {
+        val KEY_TOKEN = stringPreferencesKey("token")
     }
 }

@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityStoryDetailBinding
 import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.model.Story
+import com.arya.storyapp.util.Constants
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class StoryDetailActivity : AppCompatActivity() {
     private fun setupUI() {
         binding.btnAddStory.setOnClickListener { navigateToAddStory() }
 
-        val story: Story? = intent.getParcelableExtra("story")
+        val story: Story? = intent.getParcelableExtra(Constants.STORY_KEY)
         story?.let { displayStoryDetails(it) }
     }
 
@@ -42,13 +42,13 @@ class StoryDetailActivity : AppCompatActivity() {
             .centerCrop()
             .placeholder(R.color.black)
             .into(binding.ivStory)
-        binding.ivStory.transitionName = "image"
+        binding.ivStory.transitionName = Constants.IMAGE
 
         binding.tvUsername.text = story.name
-        binding.tvUsername.transitionName = "username"
+        binding.tvUsername.transitionName = Constants.USERNAME
 
         binding.tvDescription.text = story.description
-        binding.tvDescription.transitionName = "description"
+        binding.tvDescription.transitionName = Constants.DESCRIPTION
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

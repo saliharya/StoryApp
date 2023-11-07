@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityAddStoryBinding
 import com.arya.storyapp.ui.viewmodel.AddStoryViewModel
 import com.arya.storyapp.util.getImageUri
@@ -39,7 +40,7 @@ class AddStoryActivity : AppCompatActivity() {
 
         viewModel.successLiveData.observe(this) { success ->
             if (success) {
-                showToast("Story uploaded successfully")
+                showToast(getString(R.string.story_uploaded_successfully))
                 navigateToMainActivity()
             }
         }
@@ -48,7 +49,7 @@ class AddStoryActivity : AppCompatActivity() {
     private fun uploadImage() {
         val description = binding.etDescription.text.toString()
         if (description.isBlank()) {
-            showToast("Please enter a description")
+            showToast(getString(R.string.please_enter_a_description))
             return
         }
 

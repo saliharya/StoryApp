@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arya.storyapp.R
 import com.arya.storyapp.model.Story
 import com.arya.storyapp.ui.activity.StoryDetailActivity
+import com.arya.storyapp.util.Constants
 import com.bumptech.glide.Glide
 
 class ListStoryAdapter :
@@ -29,14 +30,14 @@ class ListStoryAdapter :
         story?.let { holder.bind(it) }
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, StoryDetailActivity::class.java).apply {
-                putExtra("story", story)
+                putExtra(Constants.STORY_KEY, story)
             }
 
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 holder.itemView.context as Activity,
-                Pair(holder.storyImageView, "image"),
-                Pair(holder.usernameTextView, "username"),
-                Pair(holder.descriptionTextView, "description")
+                Pair(holder.storyImageView, Constants.IMAGE),
+                Pair(holder.usernameTextView, Constants.USERNAME),
+                Pair(holder.descriptionTextView, Constants.DESCRIPTION)
             )
 
             holder.itemView.context.startActivity(intent, options.toBundle())

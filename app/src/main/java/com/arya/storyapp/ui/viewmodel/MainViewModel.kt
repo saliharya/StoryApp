@@ -37,20 +37,14 @@ class MainViewModel @Inject constructor(
     fun getAllStories(location: Int) {
         viewModelScope.launch {
             try {
-                val token = dataStoreManager.getToken()
-                if (token != null) {
-                    currentLocation = location
-                    val factory = { StoryPagingSource(storyRepository, token, location) }
-                    val config = PagingConfig(pageSize = 20, enablePlaceholders = false)
-                    val storiesFlow = Pager(config = config, pagingSourceFactory = factory).flow
-                    _isLoadingLiveData.value = true
-                    storiesFlow.cachedIn(viewModelScope).collectLatest { pagingData ->
-                        _responseLiveData.value = pagingData
-                        _isLoadingLiveData.value = false
-                    }
-                } else {
+                currentLocation = location
+                val factory = { StoryPagingSource(storyRepository, location) }
+                val config = PagingConfig(pageSize = 20, enablePlaceholders = false)
+                val storiesFlow = Pager(config = config, pagingSourceFactory = factory).flow
+                _isLoadingLiveData.value = true
+                storiesFlow.cachedIn(viewModelScope).collectLatest { pagingData ->
+                    _responseLiveData.value = pagingData
                     _isLoadingLiveData.value = false
-                    _errorLiveData.value = "Token not found"
                 }
             } catch (e: Exception) {
                 _isLoadingLiveData.value = false

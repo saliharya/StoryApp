@@ -10,14 +10,13 @@ import java.io.IOException
 
 class StoryPagingSource(
     private val storyRepository: StoryRepository,
-    private val token: String,
     private val location: Int
 ) : PagingSource<Int, Story>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Story> {
         val page = params.key ?: 1
         return try {
-            val response = storyRepository.getAllStories(token, page, 10, location).awaitResponse()
+            val response = storyRepository.getAllStories(page, 10, location).awaitResponse()
             val stories = response.body()?.listStory ?: emptyList()
 
             LoadResult.Page(

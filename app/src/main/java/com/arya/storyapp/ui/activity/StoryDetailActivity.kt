@@ -11,7 +11,6 @@ import com.arya.storyapp.R
 import com.arya.storyapp.databinding.ActivityStoryDetailBinding
 import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.model.Story
-import com.arya.storyapp.ui.viewmodel.StoryDetailViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class StoryDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryDetailBinding
-    private val viewModel: StoryDetailViewModel by viewModels()
     private val dataStoreManager: DataStoreManager by lazy { DataStoreManager(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +34,6 @@ class StoryDetailActivity : AppCompatActivity() {
 
         val story: Story? = intent.getParcelableExtra("story")
         story?.let { displayStoryDetails(it) }
-
-        viewModel.isLoadingLiveData.observe(this) {
-            //implementasi kemudian
-        }
     }
 
     private fun displayStoryDetails(story: Story) {

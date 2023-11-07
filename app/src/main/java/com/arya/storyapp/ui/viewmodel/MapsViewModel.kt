@@ -21,16 +21,13 @@ class MapsViewModel @Inject constructor(
     fun fetchStoriesWithLocation() {
         viewModelScope.launch {
             try {
-                val token = dataStoreManager.getToken()
                 val response =
-                    token?.let { storyRepository.getStoriesWithLocation(1, it).awaitResponse() }
-                if (response != null) {
-                    if (response.isSuccessful) {
-                        val stories = response.body()?.listStory ?: emptyList()
-                        storiesLiveData.value = stories
-                    } else {
-                        // Handle API request error
-                    }
+                    storyRepository.getStoriesWithLocation(1).awaitResponse()
+                if (response.isSuccessful) {
+                    val stories = response.body()?.listStory ?: emptyList()
+                    storiesLiveData.value = stories
+                } else {
+                    // Handle API request error
                 }
             } catch (e: Exception) {
                 // Handle exceptions

@@ -17,13 +17,11 @@ interface StoryService {
         @Query("page") page: Int?,
         @Query("size") size: Int?,
         @Query("location") location: Int,
-        @Header("Authorization") token: String
     ): Call<StoryResponse>
 
     @GET("stories")
     fun getStoriesWithLocation(
         @Query("location") location: Int = 1,
-        @Header("Authorization") token: String,
     ): Call<StoryResponse>
 
     @Multipart
@@ -33,6 +31,5 @@ interface StoryService {
         @Part photo: MultipartBody.Part,
         @Part("lat") lat: RequestBody?,
         @Part("lon") lon: RequestBody?,
-        @Header("Authorization") token: String
     ): Call<StoryResponse>
 }

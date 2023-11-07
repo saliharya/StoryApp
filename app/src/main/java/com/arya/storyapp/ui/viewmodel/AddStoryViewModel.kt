@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arya.storyapp.local.DataStoreManager
 import com.arya.storyapp.remote.response.StoryResponse
 import com.arya.storyapp.repository.StoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AddStoryViewModel @Inject constructor(
     private val storyRepository: StoryRepository,
-    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val _responseLiveData = MutableLiveData<StoryResponse>()
@@ -26,16 +24,13 @@ class AddStoryViewModel @Inject constructor(
 
     fun addStory(description: String, photoFile: File, lat: Float?, lon: Float?) {
         viewModelScope.launch {
-            val token = dataStoreManager.getToken()
 
-            if (token != null) {
-                try {
-                    val response =
-                        storyRepository.addStory(token, description, photoFile, lat, lon).await()
-                    _responseLiveData.value = response
-                    _successLiveData.value = true
-                } catch (_: Exception) {
-                }
+            try {
+                val response =
+                    storyRepository.addStory(description, photoFile, lat, lon).await()
+                _responseLiveData.value = response
+                _successLiveData.value = true
+            } catch (_: Exception) {
             }
         }
     }

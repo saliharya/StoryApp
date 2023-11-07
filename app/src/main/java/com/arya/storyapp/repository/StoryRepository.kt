@@ -14,18 +14,17 @@ import javax.inject.Inject
 @ViewModelScoped
 class StoryRepository @Inject constructor(private val storyService: StoryService) {
 
-    fun getAllStories(token: String, page: Int?, size: Int?, location: Int): Call<StoryResponse> {
+    fun getAllStories(page: Int?, size: Int?, location: Int): Call<StoryResponse> {
         return storyService.getAllStories(
-            page, size, location, "Bearer $token"
+            page, size, location
         )
     }
 
-    fun getStoriesWithLocation(location: Int, token: String): Call<StoryResponse> {
-        return storyService.getStoriesWithLocation(location, "Bearer $token")
+    fun getStoriesWithLocation(location: Int): Call<StoryResponse> {
+        return storyService.getStoriesWithLocation(location)
     }
 
     fun addStory(
-        token: String,
         description: String,
         photoFile: File,
         lat: Float?,
@@ -38,6 +37,6 @@ class StoryRepository @Inject constructor(private val storyService: StoryService
         val latPart = lat?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
         val lonPart = lon?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        return storyService.addStory(descriptionPart, photoPart, latPart, lonPart, "Bearer $token")
+        return storyService.addStory(descriptionPart, photoPart, latPart, lonPart)
     }
 }

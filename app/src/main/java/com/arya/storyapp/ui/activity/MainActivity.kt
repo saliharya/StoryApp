@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnAddStory.setOnClickListener { navigateToAddStory() }
         binding.btnMaps.setOnClickListener { navigateToMaps() }
         setupRecyclerView()
-        observeViewModel()
         observeTokenAndLoadStories()
     }
 
@@ -63,22 +62,12 @@ class MainActivity : AppCompatActivity() {
         binding.rvStories.adapter = storiesAdapter
     }
 
-    private fun observeViewModel() {
-        with(viewModel) {
-            responseLiveData.observe(this@MainActivity) { stories ->
-                storiesAdapter.submitData(lifecycle, stories)
-            }
-
-            errorLiveData.observe(this@MainActivity) { error ->
-                showToast(error)
-            }
-        }
-    }
-
     private fun observeTokenAndLoadStories() = lifecycleScope.launch {
         dataStoreManager.tokenFlow.collectLatest { token ->
             if (token == null) navigateToLogin()
-            else viewModel.getAllStories(0)
+            else viewModel.getAllStories().observe(this@MainActivity) {
+                storiesAdapter.submitData(lifecycle, it)
+            }
         }
     }
 

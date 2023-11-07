@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -94,7 +93,6 @@ class AddStoryActivity : AppCompatActivity() {
 
     private fun showImage() {
         currentImageUri?.let {
-            Log.d("Image URI", "showImage: $it")
             binding.ivUpload.setImageURI(it)
         }
     }
@@ -120,8 +118,6 @@ class AddStoryActivity : AppCompatActivity() {
         if (uri != null) {
             currentImageUri = uri
             showImage()
-        } else {
-            Log.d("Photo Picker", "No media selected")
         }
     }
 

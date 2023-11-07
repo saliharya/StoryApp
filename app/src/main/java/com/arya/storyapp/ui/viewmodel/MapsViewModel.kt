@@ -15,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MapsViewModel @Inject constructor(
     private val storyRepository: StoryRepository,
-    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
     private val storiesLiveData: MutableLiveData<List<Story>> = MutableLiveData()
     fun fetchStoriesWithLocation() {

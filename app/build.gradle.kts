@@ -34,9 +34,7 @@ android {
             )
         }
     }
-    productFlavors.forEach {
-        it.buildConfigField("String", "BASE_URL", "\"https://story-api.dicoding.dev/v1/\"")
-    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -46,7 +44,6 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        buildConfig = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
